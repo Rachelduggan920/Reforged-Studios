@@ -1,0 +1,441 @@
+
+<style>
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .page { background: #0a1f1d; font-family: var(--font-sans); color: #fff; }
+  .topnav { background: #071918; border-bottom: 1px solid #1a3530; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 50px; }
+  .nav-brand { display: flex; align-items: center; gap: 10px; }
+  .nav-title { font-size: 14px; font-weight: 500; color: #fff; }
+  .nav-sub { font-size: 10px; color: #5DCAA5; letter-spacing: 0.08em; }
+  .nav-tabs { display: flex; gap: 4px; }
+  .tab-btn { font-size: 12px; color: #7aa39d; cursor: pointer; padding: 6px 14px; border-radius: 6px; border: none; background: transparent; transition: all 0.15s; }
+  .tab-btn:hover { background: #112a26; color: #c8ddd9; }
+  .tab-btn.active { background: #E96C2E; color: #fff; }
+  .live-dot { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #5DCAA5; }
+  .pulse { width: 6px; height: 6px; border-radius: 50%; background: #5DCAA5; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .body { padding: 16px 20px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin-bottom: 14px; }
+  .mcard { background: #112a26; border: 1px solid #1e4039; border-radius: 10px; padding: 12px 14px; transition: border-color 0.15s; }
+  .mcard:hover { border-color: #E96C2E; }
+  .mcard-label { font-size: 10px; color: #7aa39d; margin-bottom: 5px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .mcard-val { font-size: 20px; font-weight: 500; color: #fff; }
+  .mcard-delta { font-size: 11px; margin-top: 3px; }
+  .up { color: #5DCAA5; } .down { color: #E96C2E; }
+  .accent-top { border-top: 2px solid #E96C2E; }
+  .grid3 { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .card { background: #112a26; border: 1px solid #1e4039; border-radius: 10px; padding: 14px 16px; }
+  .card-title { font-size: 10px; font-weight: 500; color: #5DCAA5; margin-bottom: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .seg-row { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+  .seg-label { font-size: 12px; color: #a0c4bd; width: 80px; flex-shrink: 0; }
+  .seg-bw { flex: 1; height: 5px; background: #1e4039; border-radius: 3px; }
+  .seg-bar { height: 5px; border-radius: 3px; }
+  .seg-val { font-size: 12px; color: #fff; width: 32px; text-align: right; font-weight: 500; }
+  .econ-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #1a3530; }
+  .econ-row:last-child { border-bottom: none; }
+  .econ-icon { width: 24px; height: 24px; border-radius: 5px; background: #1a3d38; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .econ-label { flex: 1; font-size: 12px; color: #a0c4bd; }
+  .econ-val { font-size: 13px; font-weight: 500; color: #fff; }
+  .econ-bw { width: 50px; height: 3px; background: #1e4039; border-radius: 2px; margin-left: 6px; }
+  .econ-bar { height: 3px; border-radius: 2px; }
+  .bot-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid #1a3530; cursor: pointer; border-radius: 4px; transition: background 0.1s; }
+  .bot-row:last-child { border-bottom: none; }
+  .bot-row:hover { background: #1a3530; padding-left: 4px; }
+  .bot-id { font-size: 11px; color: #7aa39d; font-family: var(--font-mono); flex: 1; }
+  .risk-pill { font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+  .risk-high { background: #3a1a0d; color: #E96C2E; border: 1px solid #5c2a10; }
+  .risk-med { background: #2a2810; color: #EF9F27; border: 1px solid #4a4010; }
+  .risk-low { background: #0d2e20; color: #5DCAA5; border: 1px solid #1a4a30; }
+  .bot-score { font-size: 12px; font-weight: 500; color: #fff; width: 28px; text-align: right; }
+  .ban-btn { font-size: 10px; padding: 2px 8px; border-radius: 5px; border: 1px solid #5c2a10; background: transparent; color: #E96C2E; cursor: pointer; transition: all 0.15s; }
+  .ban-btn:hover { background: #E96C2E; color: #fff; }
+  .banned { opacity: 0.4; text-decoration: line-through; pointer-events: none; }
+  .chain-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; }
+  .chain-item { background: #0d2320; border: 1px solid #1a3530; border-radius: 7px; padding: 9px 10px; cursor: pointer; transition: border-color 0.15s; }
+  .chain-item:hover { border-color: #5DCAA5; }
+  .chain-item.selected { border-color: #E96C2E; background: #1a2e28; }
+  .chain-name { font-size: 10px; color: #7aa39d; margin-bottom: 4px; }
+  .chain-stat { font-size: 13px; font-weight: 500; color: #fff; }
+  .chain-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #5DCAA5; margin-right: 3px; }
+  .act-row { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 1px solid #1a3530; }
+  .act-row:last-child { border-bottom: none; }
+  .act-row.new { animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .act-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .act-text { font-size: 12px; color: #c8ddd9; flex: 1; line-height: 1.5; }
+  .act-time { font-size: 10px; color: #5a7a74; white-space: nowrap; }
+  .range-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .range-label { font-size: 12px; color: #7aa39d; width: 100px; }
+  .range-wrap input[type=range] { flex: 1; accent-color: #E96C2E; }
+  .range-out { font-size: 13px; font-weight: 500; color: #fff; width: 60px; text-align: right; }
+  .sparkline-wrap { height: 90px; margin-bottom: 4px; }
+  .filter-row { display: flex; gap: 6px; margin-bottom: 12px; }
+  .filter-btn { font-size: 11px; padding: 4px 12px; border-radius: 6px; border: 1px solid #1e4039; background: transparent; color: #7aa39d; cursor: pointer; transition: all 0.15s; }
+  .filter-btn:hover { background: #1a3530; color: #c8ddd9; }
+  .filter-btn.active { background: #E96C2E; color: #fff; border-color: #E96C2E; }
+  .econ-full-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin-bottom: 10px; }
+  .big-stat { background: #112a26; border: 1px solid #1e4039; border-radius: 10px; padding: 14px 16px; }
+  .big-stat-label { font-size: 10px; color: #5DCAA5; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .big-stat-val { font-size: 28px; font-weight: 500; color: #fff; margin-bottom: 4px; }
+  .big-stat-sub { font-size: 11px; color: #7aa39d; }
+  .footer { font-size: 10px; color: #2a5050; text-align: center; padding-top: 8px; letter-spacing: 0.04em; border-top: 1px solid #1a3530; margin-top: 4px; padding-bottom: 4px; }
+</style>
+
+<h2 class="sr-only">Reforged Studios interactive blockchain game economy analytics dashboard with tabbed navigation</h2>
+
+<div class="page">
+  <div class="topnav">
+    <div class="nav-brand">
+      <svg width="26" height="26" viewBox="0 0 28 28">
+        <polygon points="14,1 26,7.5 26,20.5 14,27 2,20.5 2,7.5" fill="#0F6E56" stroke="#E96C2E" stroke-width="1.5"/>
+        <circle cx="14" cy="13" r="3" fill="#E96C2E"/>
+        <line x1="14" y1="10" x2="14" y2="7" stroke="#E96C2E" stroke-width="1.5"/>
+        <line x1="11.4" y1="11.5" x2="9" y2="10" stroke="#E96C2E" stroke-width="1.5"/>
+        <line x1="16.6" y1="11.5" x2="19" y2="10" stroke="#E96C2E" stroke-width="1.5"/>
+      </svg>
+      <div>
+        <div class="nav-title">Reforged Studios</div>
+        <div class="nav-sub">Economy Intelligence</div>
+      </div>
+    </div>
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('overview',this)">Overview</button>
+      <button class="tab-btn" onclick="switchTab('economy',this)">Economy</button>
+      <button class="tab-btn" onclick="switchTab('security',this)">Security</button>
+      <button class="tab-btn" onclick="switchTab('chains',this)">Chains</button>
+    </div>
+    <div class="live-dot"><div class="pulse"></div>Live</div>
+  </div>
+
+  <div class="body">
+    <div id="tab-overview" class="tab-panel active">
+      <div class="metrics">
+        <div class="mcard accent-top">
+          <div class="mcard-label">Token supply (M)</div>
+          <div class="mcard-val" id="m-supply">184.2</div>
+          <div class="mcard-delta up">▲ 2.1% vs yesterday</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-label">GDP index</div>
+          <div class="mcard-val">9,412</div>
+          <div class="mcard-delta up">▲ 0.8% 24h</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-label">Bots flagged today</div>
+          <div class="mcard-val" id="m-bots">38</div>
+          <div class="mcard-delta down">▼ 14 vs avg</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-label">Tx / min (live)</div>
+          <div class="mcard-val" id="m-tx">2,847</div>
+          <div class="mcard-delta up">▲ 12% peak</div>
+        </div>
+      </div>
+      <div class="grid3">
+        <div class="card">
+          <div class="card-title">Token velocity — 7d</div>
+          <div class="sparkline-wrap">
+            <canvas id="velocityChart" width="400" height="86"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">User segments</div>
+          <div class="seg-row"><span class="seg-label">Power traders</span><div class="seg-bw"><div class="seg-bar" style="width:72%; background:#E96C2E;"></div></div><span class="seg-val">72%</span></div>
+          <div class="seg-row"><span class="seg-label">Casual players</span><div class="seg-bw"><div class="seg-bar" style="width:51%; background:#5DCAA5;"></div></div><span class="seg-val">51%</span></div>
+          <div class="seg-row"><span class="seg-label">Speculators</span><div class="seg-bw"><div class="seg-bar" style="width:29%; background:#EF9F27;"></div></div><span class="seg-val">29%</span></div>
+          <div class="seg-row" style="margin-bottom:0;"><span class="seg-label">NFT holders</span><div class="seg-bw"><div class="seg-bar" style="width:18%; background:#7aa39d;"></div></div><span class="seg-val">18%</span></div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">Live event stream</div>
+          <div id="event-feed"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Chain pipeline status</div>
+          <div class="chain-grid" id="chain-mini"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-economy" class="tab-panel">
+      <div class="econ-full-grid">
+        <div class="big-stat"><div class="big-stat-label">Money supply (M2)</div><div class="big-stat-val">184.2M</div><div class="big-stat-sub up">▲ 2.1% since yesterday</div></div>
+        <div class="big-stat"><div class="big-stat-label">GDP index</div><div class="big-stat-val">9,412</div><div class="big-stat-sub up">▲ 0.8% 24h change</div></div>
+        <div class="big-stat"><div class="big-stat-label">Inflation rate</div><div class="big-stat-val">2.4%</div><div class="big-stat-sub" style="color:#5DCAA5;">Within target range</div></div>
+        <div class="big-stat"><div class="big-stat-label">Avg asset price</div><div class="big-stat-val">$14.80</div><div class="big-stat-sub up">▲ $1.20 this week</div></div>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <div class="card-title">Simulate mint rate impact</div>
+        <div class="range-wrap">
+          <span class="range-label">Mint rate (M/day)</span>
+          <input type="range" min="0.1" max="5" step="0.1" value="1.2" id="mint-slider" oninput="updateEconSim()">
+          <span class="range-out" id="mint-out">1.2M</span>
+        </div>
+        <div class="range-wrap">
+          <span class="range-label">Player burn rate</span>
+          <input type="range" min="0.1" max="5" step="0.1" value="0.9" id="burn-slider" oninput="updateEconSim()">
+          <span class="range-out" id="burn-out">0.9M</span>
+        </div>
+        <div style="display:flex; gap:16px; margin-top:10px;">
+          <div style="flex:1; background:#0d2320; border-radius:8px; padding:10px 14px;">
+            <div style="font-size:10px; color:#7aa39d; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Net flow</div>
+            <div style="font-size:18px; font-weight:500;" id="net-flow">+0.3M/day</div>
+          </div>
+          <div style="flex:1; background:#0d2320; border-radius:8px; padding:10px 14px;">
+            <div style="font-size:10px; color:#7aa39d; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Inflation pressure</div>
+            <div style="font-size:18px; font-weight:500;" id="inflation-pressure">Low</div>
+          </div>
+          <div style="flex:1; background:#0d2320; border-radius:8px; padding:10px 14px;">
+            <div style="font-size:10px; color:#7aa39d; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">30-day supply</div>
+            <div style="font-size:18px; font-weight:500;" id="supply-30">193.2M</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Economy indicators</div>
+        <div class="econ-row"><div class="econ-icon">💰</div><span class="econ-label">Money supply (M2)</span><span class="econ-val">184.2M</span><div class="econ-bw"><div class="econ-bar" style="width:72%; background:#5DCAA5;"></div></div></div>
+        <div class="econ-row"><div class="econ-icon">📈</div><span class="econ-label">Inflation index</span><span class="econ-val">2.4%</span><div class="econ-bw"><div class="econ-bar" style="width:24%; background:#5DCAA5;"></div></div></div>
+        <div class="econ-row"><div class="econ-icon">🔄</div><span class="econ-label">Avg asset price</span><span class="econ-val">$14.80</span><div class="econ-bw"><div class="econ-bar" style="width:60%; background:#E96C2E;"></div></div></div>
+        <div class="econ-row"><div class="econ-icon">⚡</div><span class="econ-label">Tx velocity</span><span class="econ-val">High</span><div class="econ-bw"><div class="econ-bar" style="width:88%; background:#EF9F27;"></div></div></div>
+      </div>
+    </div>
+
+    <div id="tab-security" class="tab-panel">
+      <div class="metrics" style="grid-template-columns: repeat(3, minmax(0,1fr));">
+        <div class="mcard accent-top">
+          <div class="mcard-label">Flagged today</div>
+          <div class="mcard-val">38</div>
+          <div class="mcard-delta down">▼ 14 vs avg</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-label">Auto-banned</div>
+          <div class="mcard-val" id="s-banned">0</div>
+          <div class="mcard-delta" style="color:#7aa39d;">this session</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-label">Economy protected</div>
+          <div class="mcard-val">$42.1K</div>
+          <div class="mcard-delta up">value preserved</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Bot detection queue</div>
+        <div class="filter-row">
+          <button class="filter-btn active" onclick="filterBots('all',this)">All</button>
+          <button class="filter-btn" onclick="filterBots('high',this)">High risk</button>
+          <button class="filter-btn" onclick="filterBots('medium',this)">Medium</button>
+          <button class="filter-btn" onclick="filterBots('low',this)">Low</button>
+        </div>
+        <div id="bot-list"></div>
+      </div>
+    </div>
+
+    <div id="tab-chains" class="tab-panel">
+      <div class="card" style="margin-bottom:10px;">
+        <div class="card-title">Select chain to inspect</div>
+        <div class="chain-grid" id="chain-selector"></div>
+      </div>
+      <div class="card" id="chain-detail">
+        <div style="font-size:12px; color:#7aa39d; text-align:center; padding:16px 0;">Select a chain above to inspect its pipeline</div>
+      </div>
+    </div>
+
+    <div class="footer">Snowflake + AWS (Lambda · S3 · API Gateway) · Blockchain crawlers · Built by KoobrikLabs</div>
+  </div>
+</div>
+
+<script>
+const CHAINS = [
+  { name:'Ethereum', tx:'1.2M', events:'84K', nfts:'12K', status:'healthy', color:'#5DCAA5' },
+  { name:'Polygon', tx:'841K', events:'61K', nfts:'8.4K', status:'healthy', color:'#5DCAA5' },
+  { name:'Solana', tx:'3.4M', events:'210K', nfts:'44K', status:'healthy', color:'#5DCAA5' },
+  { name:'Arbitrum', tx:'620K', events:'40K', nfts:'5.1K', status:'lag', color:'#E96C2E' },
+  { name:'ImmutableX', tx:'290K', events:'22K', nfts:'31K', status:'healthy', color:'#EF9F27' },
+  { name:'BNB Chain', tx:'510K', events:'38K', nfts:'6.2K', status:'healthy', color:'#5DCAA5' }
+];
+const BOTS = [
+  { id:'0x4f3a…c12e', risk:'high', score:97, reason:'Rapid-fire trades, 340 tx/min' },
+  { id:'0x8b2c…91aa', risk:'high', score:91, reason:'Wash trading detected' },
+  { id:'0x2e11…fa90', risk:'high', score:88, reason:'Multi-wallet arbitrage pattern' },
+  { id:'0x1d7f…e44b', risk:'medium', score:64, reason:'Velocity spike, unverified wallet' },
+  { id:'0xac90…2f18', risk:'medium', score:58, reason:'Unusual NFT accumulation' },
+  { id:'0x77bb…3c01', risk:'medium', score:51, reason:'Bot-like timing intervals' },
+  { id:'0x33e1…7c03', risk:'low', score:21, reason:'Minor pattern anomaly' },
+  { id:'0xd4a2…8812', risk:'low', score:14, reason:'New wallet, low activity' }
+];
+const EVENTS = [
+  { text:'NFT sale — Sword of Eternity #4821 → $340', color:'#5DCAA5' },
+  { text:'Bot flagged — 0x4f3a rapid-fire trades suppressed', color:'#E96C2E' },
+  { text:'Smart contract — staking pool rebalanced', color:'#7aa39d' },
+  { text:'Inflation alert — mint velocity up 4.1%', color:'#EF9F27' },
+  { text:'New cohort — 214 wallets onboarded', color:'#5DCAA5' },
+  { text:'NFT sale — Dragon Helm #992 → $210', color:'#5DCAA5' },
+  { text:'Token burn — 12K tokens destroyed in raid event', color:'#E96C2E' },
+  { text:'GDP spike — 0.3% jump in 5-min window', color:'#EF9F27' }
+];
+
+let bannedBots = new Set();
+let currentFilter = 'all';
+let eventIndex = 4;
+let liveEvents = EVENTS.slice(0,4).map((e,i) => ({ ...e, time:`${i+1}:${String(Math.floor(Math.random()*50)+10).padStart(2,'0')}` }));
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function renderFeed() {
+  const feed = document.getElementById('event-feed');
+  if (!feed) return;
+  feed.innerHTML = liveEvents.slice(-5).reverse().map((e,i) =>
+    `<div class="act-row${i===0?' new':''}">
+      <div class="act-dot" style="background:${e.color};"></div>
+      <span class="act-text">${e.text}</span>
+      <span class="act-time">${e.time}</span>
+    </div>`
+  ).join('');
+}
+
+function renderChainMini() {
+  const el = document.getElementById('chain-mini');
+  if (!el) return;
+  el.innerHTML = CHAINS.map(c =>
+    `<div class="chain-item">
+      <div class="chain-name"><span class="chain-dot" style="background:${c.color};"></span>${c.name}</div>
+      <div class="chain-stat">${c.tx} tx</div>
+    </div>`
+  ).join('');
+}
+
+function renderBotList(filter) {
+  const el = document.getElementById('bot-list');
+  if (!el) return;
+  const filtered = filter==='all' ? BOTS : BOTS.filter(b => b.risk===filter);
+  el.innerHTML = filtered.map(b => {
+    const banned = bannedBots.has(b.id);
+    return `<div class="bot-row${banned?' banned':''}">
+      <span class="bot-id">${b.id}</span>
+      <span class="risk-pill risk-${b.risk}">${b.risk==='high'?'High risk':b.risk==='medium'?'Medium':'Low'}</span>
+      <span style="font-size:11px; color:#5a7a74; flex:1; padding-left:8px;">${b.reason}</span>
+      <span class="bot-score">${b.score}</span>
+      <button class="ban-btn" onclick="banBot('${b.id}')">${banned?'Banned':'Ban'}</button>
+    </div>`;
+  }).join('');
+}
+
+function filterBots(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBotList(f);
+}
+
+function banBot(id) {
+  bannedBots.add(id);
+  const el = document.getElementById('s-banned');
+  if (el) el.textContent = bannedBots.size;
+  const mBots = document.getElementById('m-bots');
+  if (mBots) mBots.textContent = Math.max(0, 38 - bannedBots.size);
+  renderBotList(currentFilter);
+}
+
+function renderChainSelector() {
+  const el = document.getElementById('chain-selector');
+  if (!el) return;
+  el.innerHTML = CHAINS.map((c,i) =>
+    `<div class="chain-item" onclick="showChainDetail(${i},this)">
+      <div class="chain-name"><span class="chain-dot" style="background:${c.color};"></span>${c.name}</div>
+      <div class="chain-stat">${c.tx} tx</div>
+    </div>`
+  ).join('');
+}
+
+function showChainDetail(i, el) {
+  document.querySelectorAll('#chain-selector .chain-item').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  const c = CHAINS[i];
+  document.getElementById('chain-detail').innerHTML = `
+    <div class="card-title">${c.name} pipeline</div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px;">
+      <div style="background:#0d2320; border-radius:8px; padding:10px 12px;">
+        <div style="font-size:10px; color:#7aa39d; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Transactions</div>
+        <div style="font-size:18px; font-weight:500;">${c.tx}</div>
+      </div>
+      <div style="background:#0d2320; border-radius:8px; padding:10px 12px;">
+        <div style="font-size:10px; color:#7aa39d; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Contract events</div>
+        <div style="font-size:18px; font-weight:500;">${c.events}</div>
+      </div>
+      <div style="background:#0d2320; border-radius:8px; padding:10px 12px;">
+        <div style="font-size:10px; color:#7aa39d; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">NFT movements</div>
+        <div style="font-size:18px; font-weight:500;">${c.nfts}</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+      <span style="color:#7aa39d;">Pipeline status:</span>
+      <span style="color:${c.color}; font-weight:500;">${c.status==='healthy'?'● Healthy — ingesting live':'⚠ Lag detected — 4s delay'}</span>
+    </div>`;
+}
+
+function updateEconSim() {
+  const mint = parseFloat(document.getElementById('mint-slider').value);
+  const burn = parseFloat(document.getElementById('burn-slider').value);
+  document.getElementById('mint-out').textContent = mint.toFixed(1)+'M';
+  document.getElementById('burn-out').textContent = burn.toFixed(1)+'M';
+  const net = mint - burn;
+  const netEl = document.getElementById('net-flow');
+  netEl.textContent = (net>=0?'+':'')+net.toFixed(1)+'M/day';
+  netEl.style.color = net>1?'#E96C2E':net<0?'#5DCAA5':'#fff';
+  const pressure = net>2?'Critical':net>1?'High':net>0.3?'Moderate':net<=0?'Deflation':'Low';
+  const pEl = document.getElementById('inflation-pressure');
+  pEl.textContent = pressure;
+  pEl.style.color = net>1?'#E96C2E':net<=0?'#7aa39d':'#5DCAA5';
+  document.getElementById('supply-30').textContent = (184.2+net*30).toFixed(1)+'M';
+}
+
+function drawVelocityChart() {
+  const canvas = document.getElementById('velocityChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.offsetWidth || 400;
+  canvas.width = w;
+  const h = 86;
+  const pts = [85,70,78,55,50,60,42,38,50,32,28];
+  const step = w/(pts.length-1);
+  ctx.clearRect(0,0,w,h);
+  ctx.beginPath();
+  ctx.moveTo(0,pts[0]);
+  pts.forEach((y,i) => ctx.lineTo(i*step,y));
+  ctx.lineTo(w,pts[pts.length-1]); ctx.lineTo(w,h); ctx.lineTo(0,h);
+  ctx.closePath();
+  ctx.fillStyle='rgba(233,108,46,0.12)'; ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(0,pts[0]);
+  pts.forEach((y,i) => ctx.lineTo(i*step,y));
+  ctx.strokeStyle='#E96C2E'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.beginPath(); ctx.arc(w,pts[pts.length-1],3,0,Math.PI*2);
+  ctx.fillStyle='#E96C2E'; ctx.fill();
+}
+
+function tickLiveFeed() {
+  const now = new Date();
+  const t = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  liveEvents.push({ ...EVENTS[eventIndex%EVENTS.length], time:t });
+  eventIndex++;
+  renderFeed();
+  const mTx = document.getElementById('m-tx');
+  if (mTx) mTx.textContent = (2800+Math.floor(Math.random()*200)).toLocaleString();
+}
+
+renderFeed();
+renderChainMini();
+renderBotList('all');
+renderChainSelector();
+setTimeout(drawVelocityChart, 100);
+setInterval(tickLiveFeed, 4000);
+</script>
